@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0066ff 0%, #00ffcc 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .welcome-message {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .button {
+            background: #00bcd4;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: #008ba3;
+        }
+        .logout-button {
+            background: #ff4444;
+        }
+        .logout-button:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Student Portal</h1>
+        <div class="welcome-message">
+            You are successfully logged in!
+        </div>
+        <div class="nav-buttons">
+            <a href="index.html" class="button">Register New Student</a>
+            <button onclick="handleLogout()" class="button logout-button">Logout</button>
+        </div>
+    </div>
+    <script>
+        // Check authentication status when page loads
+        window.addEventListener('load', function() {
+            fetch('/checkAuth')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Not authenticated');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    window.location.href = '/login.html';
+                });
+        });
+    </script>
+    <script>
+        // Check if user is logged in
+        fetch('/checkAuth')
+            .then(response => {
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                }
+            });
+
+        function handleLogout() {
+            fetch('/logout', {
+                method: 'POST'
+            })
+            .then(() => {
+                window.location.href = '/login.html';
+            })
+            .catch(error => {
+                alert('Error during logout');
+            });
+        }
+    </script>
+</body>
+</html>

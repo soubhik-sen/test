@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details Form</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0066ff 0%, #00ffcc 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-container {
+            background: white;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0066ff;
+        }
+        button {
+            width: 100%;
+            background: #00bcd4;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #008ba3;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Student Registration Form</h2>
+        <form id="studentForm" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="studentId">Student ID:</label>
+                <input type="text" id="studentId" name="studentId" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">Grade/Year:</label>
+                <select id="grade" name="grade" required>
+                    <option value="">Select Grade</option>
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Add this at the beginning of the script section
+        // Check if user is logged in
+        fetch('/checkAuth')
+            .then(response => {
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                }
+            });
+
+        function validateForm() {
+            const form = document.getElementById('studentForm');
+            if (form.checkValidity()) {
+                const data = {
+                    fullName: document.getElementById('fullName').value,
+                    studentId: document.getElementById('studentId').value,
+                    email: document.getElementById('email').value,
+                    dateOfBirth: document.getElementById('dateOfBirth').value,
+                    grade: document.getElementById('grade').value,
+                    phone: document.getElementById('phone').value
+                };
+
+                fetch('/student', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Student registered successfully!');
+                    form.reset();
+                })
+                .catch(error => {
+                    alert('Error saving student data');
+                });
+
+                return false;
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
