@@ -1,5 +1,6 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+// Change this line at the top
+const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const db = require('./db');
 const path = require('path');
